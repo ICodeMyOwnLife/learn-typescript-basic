@@ -44,9 +44,14 @@ export type PropTypeOf<T> = Requireable<MapToPropType<T>>;
 export type RequiredPropTypeOf<T> = Validator<MapToPropType<T>>;
 
 export type PropTypesOf<T> = {
-  readonly [K in keyof T]-?: IsOptional<T[K]> extends true
-    ? PropTypeOf<T[K]>
-    : RequiredPropTypeOf<T[K]>
+  readonly [K in keyof T]?: IsOptional<T[K]> extends true
+    ? Requireable<T[K]>
+    : Validator<T[K]>
 };
 
 export type DefaultPropsOf<T, TKey extends keyof T> = Readonly<Pick<T, TKey>>;
+
+/**
+ * Exclude from T those properties that are assignable to K
+ */
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

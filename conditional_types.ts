@@ -94,6 +94,11 @@ type ValueTypes<T> = T extends { [key in keyof T]: infer TValue }
 export type V0 = ValueTypes<{ a: number; b: string; c: Function }>;
 
 /**
+ * Omit<T, K>: Exclude from T those properties that are assignable to K
+ */
+export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
+/**
  * Exclude<T, U>: Exclude from T those types that are assignable to U
  */
 export type Exc0 = Exclude<0 | 1 | 2 | 4, 2 | 4 | 8>;

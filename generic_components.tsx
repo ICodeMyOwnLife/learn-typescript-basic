@@ -57,8 +57,15 @@ interface GenericComponentState {}
 
 export default class App extends Component {
   render() {
+    const user: User = { id: 1, name: "User 1" };
     return (
-      <GenericComponent<number> subtitle="Sub" value={5} info="" list={[]} />
+      <GenericComponent<number>
+        subtitle="Sub"
+        value={5}
+        info=""
+        list={[]}
+        data={user}
+      />
     );
   }
 }

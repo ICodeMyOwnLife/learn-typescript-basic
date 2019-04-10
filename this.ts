@@ -40,11 +40,11 @@ const userMethods: UserMethods = {
   }
 };
 
-function makeCustomModel<TModel, TMethods extends ThisType<TModel>>(
-  model: TModel,
-  methods: TMethods
-) {
-  return { ...model, ...methods };
+function makeCustomModel<
+  TModel extends object,
+  TMethods extends ThisType<TModel>
+>(model: TModel, methods: TMethods) {
+  return Object.assign({}, model, methods);
 }
 
 const customUser = makeCustomModel(user, userMethods);

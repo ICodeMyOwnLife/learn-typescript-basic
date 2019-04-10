@@ -20,11 +20,45 @@ function test(arg: unknown) {
       break;
 
     case "function":
-      console.log(arg.name);
+      console.log((<Function>arg).name);
       break;
 
     default:
       console.log(arg);
       break;
   }
+}
+
+/**
+ * User-defined type guards
+ */
+interface Animal {
+  kind: string;
+  move: () => void;
+}
+
+interface Cat extends Animal {
+  meow: () => void;
+}
+
+interface Dog extends Animal {
+  bark: () => void;
+}
+
+function action(a: Animal) {
+  if (isCat(a)) {
+    return a.meow();
+  }
+  if (isDog(a)) {
+    return a.bark();
+  }
+  a.move();
+}
+
+function isCat(a: Animal): a is Cat {
+  return "meow" in a;
+}
+
+function isDog(a: Animal): a is Dog {
+  return "bark" in a;
 }

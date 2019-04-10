@@ -1,5 +1,10 @@
+import { ComponentType, ReactElement, Component } from "react";
+
 /**
- * Reference: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#conditional-types
+ * Conditional Type and Type Inference in Conditional Type
+ * References:
+ *  https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#conditional-types
+ *  https://mariusschulz.com/blog/typescript-2-8-conditional-types
  */
 
 /**
@@ -17,8 +22,6 @@ export type TypeName<T> = T extends string
   ? "function"
   : T extends Symbol
   ? "symbol"
-  : T extends bigint
-  ? "bigint"
   : "object";
 
 export type TN0 = TypeName<string>;
@@ -38,8 +41,6 @@ export type TN13 = TypeName<string | (() => string)>;
 export type TN14 = TypeName<number[] | {}>;
 export type TN15 = TypeName<symbol>;
 export type TN16 = TypeName<Symbol>;
-export type TN17 = TypeName<bigint>;
-const a = typeof Symbol();
 
 /**
  * FunctionPropertyNames & FunctionProperties
@@ -85,18 +86,113 @@ export type E1 = ElementType<[number, string]>;
 export type E2 = ElementType<{ a: number }>;
 
 /**
+ * ResolveType<T>
+ */
+export type ResolveType<T> = T extends Promise<infer TResolve>
+  ? TResolve
+  : never;
+
+export type RT0 = ResolveType<Promise<() => boolean>>;
+export type RT1 = ResolveType<string[]>;
+
+/**
+ * ComponentProps<T>
+ */
+export type ComponentProps<T> = T extends ComponentType<infer TProps>
+  ? TProps
+  : never;
+
+export type CProps0 = ComponentProps<
+  (props: { a: number; b: string }) => ReactElement<any> | null
+>;
+
+export class Comp1 extends Component<{ c: boolean; d: Function }> {}
+export type CProps1 = ComponentProps<typeof Comp1>;
+
+/**
  * ValueTypes<T>
  */
-type ValueTypes<T> = T extends { [key in keyof T]: infer TValue }
+export type ValueTypes<T> = T extends { [key in keyof T]: infer TValue }
   ? TValue
   : never;
 
 export type V0 = ValueTypes<{ a: number; b: string; c: Function }>;
 
 /**
+ * IsOptional<T>
+ */
+export type IsOptional<T> = undefined | null extends T
+  ? true
+  : undefined extends T
+  ? true
+  : null extends T
+  ? true
+  : false;
+
+export type IO0 = IsOptional<undefined>;
+export type IO1 = IsOptional<null>;
+export type IO2 = IsOptional<number>;
+export type IO3 = IsOptional<number | null>;
+export type IO4 = IsOptional<number | undefined>;
+export type IO5 = IsOptional<never>;
+export type IO6 = IsOptional<any>;
+export type IO7 = IsOptional<unknown>;
+
+/**
+ * RequiredPropNames<T>
+ */
+export type RequiredPropNames<T> = NonNullable<
+  { [K in keyof T]: IsOptional<T[K]> extends true ? never : K }[keyof T]
+>;
+
+export type RP0 = RequiredPropNames<{
+  a: string;
+  b?: number;
+  c: boolean | null;
+  d: any;
+  e: unknown;
+}>;
+
+/**
+ * OptionalPropNames<T>
+ */
+export type OptionalPropNames<T> = Exclude<keyof T, RequiredPropNames<T>>;
+
+export type OP0 = OptionalPropNames<{
+  a: string;
+  b?: number;
+  c: boolean | null;
+  d: any;
+  e: unknown;
+}>;
+
+/**
+ * First<T>
+ * Note that the inferred type variables can only be used in the true branch of the conditional type.
+ */
+export type First<T> = T extends [infer TFirst, ...unknown[]] ? TFirst : never;
+
+export type F0 = First<[string, number, boolean]>;
+export type F1 = First<string[]>;
+export type F2 = First<number>;
+
+/**
+ * FirstParam<T>
+ */
+export type FirstParam<T extends (...args: any[]) => any> = First<
+  Parameters<T>
+>;
+
+export type FP0 = FirstParam<(a: number, b: string) => boolean>;
+export type FP1 = FirstParam<() => void>;
+export type FP2 = FirstParam<(...args: any[]) => void>;
+
+/**
  * Omit<T, K>: Exclude from T those properties that are assignable to K
  */
 export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
+
+export type O0 = Omit<{ a: number; b: string }, "a">;
 
 /**
  * Exclude<T, U>: Exclude from T those types that are assignable to U

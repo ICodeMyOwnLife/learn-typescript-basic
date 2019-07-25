@@ -50,8 +50,3 @@ export type PropTypesOf<T> = {
 };
 
 export type DefaultPropsOf<T, TKey extends keyof T> = Readonly<Pick<T, TKey>>;
-
-/**
- * Exclude from T those properties that are assignable to K
- */
-export type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;

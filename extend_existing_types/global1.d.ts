@@ -2,8 +2,8 @@ import { ResizeObserverConstructor } from "../types/ResizeObserver";
 
 declare global {
   interface Window {
-    ResizeObserver: ResizeObserverConstructor;
+    readonly ResizeObserver: ResizeObserverConstructor;
   }
 
-  var ResizeObserver: ResizeObserverConstructor;
+  const ResizeObserver: ResizeObserverConstructor;
 }

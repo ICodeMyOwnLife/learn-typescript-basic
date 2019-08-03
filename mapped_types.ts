@@ -37,7 +37,7 @@ export type Pr1 = Proxify<{ a: number; b: string }>;
  *
  * https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-1.html#mapped-types-on-tuples-and-arrays
  */
-export type Deferred<T> = { [K in keyof T]: Promise<T[K]> };
+export type Deferred<TValue> = { [K in keyof TValue]: Promise<TValue[K]> };
 
 // Examples
 export type D0 = Deferred<{ a: number; b: string }>;

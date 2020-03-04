@@ -2,6 +2,8 @@
   "cSpell.words": [
     "Proxify",
     "dzharii",
-    "semlinker"
-  ]
+    "semlinker",
+    "toolbelt"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "A00343",
+    "name": "AZK",
+    "quantity": 24,
+    "manufacturedAt": 1275498000000
+  },
+  {
+    "id": "A30062",
+    "name": "DB8",
+    "quantity": 102,
+    "manufacturedAt": 1424365200000
+  },
+  {
+    "id": "A21539",
+    "name": "C6V",
+    "quantity": 5,
+    "manufacturedAt": 1541955600000
+  },
+  {
+    "id": "AA3520",
+    "name": "MAE",
+    "quantity": 1245,
+    "manufacturedAt": 1555866000000
+  }
+]

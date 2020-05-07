@@ -1,10 +1,14 @@
-# `self` object
+# `declare self`
 
-Examples of declaring type for the `self` object in a specific file:
+Examples of declaring type for the `self` object in a specific script file:
 
 - declaring self as `ServiceWorkerGlobalScope` for service worker script files
 - declaring self as `DedicatedWorkerGlobalScope` for dedicated web worker script files
 - or even declaring self as `Window` for normal browser script files (which is normally unnecessary)
+
+This also applies to other global objects:
+
+- declaring `globalThis` as `NodeJS.Global` for NodeJS script files
 
 ## TODO
 

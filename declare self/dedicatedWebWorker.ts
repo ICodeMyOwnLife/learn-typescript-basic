@@ -1,4 +1,6 @@
-// This exists only to make `declare const self` work by converting the file to ES module
+/**
+ * In order to make `declare const self` work we have to convert the file to ES module by using `import` or `export`
+ */
 import {} from "./dedicatedWebWorker";
 
 declare const self: DedicatedWorkerGlobalScope;

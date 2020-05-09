@@ -56,6 +56,23 @@ export function logInfo(arg: unknown) {
 }
 
 /**************************************
+ * Type guard using instanceof
+ *************************************/
+export const logValue = async (
+  valueFactory: number | (() => number) | Promise<number>
+) => {
+  let value: number;
+  if (valueFactory instanceof Promise) {
+    value = await valueFactory;
+  } else if (valueFactory instanceof Function) {
+    value = valueFactory();
+  } else {
+    value = valueFactory;
+  }
+  console.log(value);
+};
+
+/**************************************
  * Type guard using type predicates
  *************************************/
 export const isPromiseLike = (o: any): o is PromiseLike<unknown> =>
@@ -70,4 +87,30 @@ export const logAsync = async (o: Promise<number> | (() => number)) => {
     value = o();
   }
   console.log(value);
+};
+
+/**************************************
+ * Type guard using discriminated union
+ *************************************/
+interface SuccessResponse<TData> {
+  status: "success";
+  statusCode: number;
+  data: TData;
+}
+
+interface FailedResponse {
+  status: "failed";
+  statusCode: number;
+  error: string;
+}
+
+type ServerResponse<TData> = SuccessResponse<TData> | FailedResponse;
+
+export const request = async (promise: Promise<ServerResponse<string>>) => {
+  const response = await promise;
+  if (response.status === "success") {
+    console.log(response.data);
+  } else {
+    console.error(response.error);
+  }
 };

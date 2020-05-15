@@ -4,3 +4,10 @@ declare module "some-missing-module" {
   import { ReadStream } from "fs";
   export const readAsStream: (url: string) => ReadStream;
 }
+
+declare module "memorystore" {
+  import session, { MemoryStore } from "express-session";
+
+  const memoryStore: (s: typeof session) => typeof MemoryStore;
+  export default memoryStore;
+}

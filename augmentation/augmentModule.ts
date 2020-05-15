@@ -1,3 +1,4 @@
+// Must import the original module to augment
 import "express-serve-static-core";
 
 declare module "express-serve-static-core" {

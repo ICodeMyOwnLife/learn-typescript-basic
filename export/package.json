@@ -1,0 +1,10 @@
+{
+  "name": "export",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {},
+  "dependencies": {
+    "@types/react": "^16.9.35"
+  }
+}

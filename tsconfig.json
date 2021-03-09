@@ -4,6 +4,8 @@
     "module": "commonjs",
     "lib": ["es2018", "esnext.asynciterable", "esnext", "dom"],
     "jsx": "react",
+    "allowJs": true,
+    "checkJs": true,
     "sourceMap": true,
     "outDir": "./build",
     "strict": true,

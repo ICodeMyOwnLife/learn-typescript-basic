@@ -4,10 +4,14 @@ export const f1 = (...args: T1) => {
   console.log(args);
 };
 
-export type T2 = [x: number, y: number, z: number];
+/**
+ * [Labeled Tuple Elements](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-0.html#labeled-tuple-elements)
+ */
+export type T2 = [x: number, y: number] | [x: number, y: number, z: number];
 export const f2 = (...args: T2) => {
   console.log(args);
 };
+f2(1, 2);
 f2(1, 2, 3);
 
 export type T3 = [number, string, boolean?];
@@ -69,3 +73,41 @@ export const f8 = (...args: T8) => {
 f8(false, "a");
 f8(1, false, "a");
 f8(1, 2, false, "a");
+
+/**
+ * [Variadic Tuple Types](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-0.html#variadic-tuple-types)
+ */
+export const concat = <
+  TArr1 extends ReadonlyArray<any>,
+  TArr2 extends ReadonlyArray<any>
+>(
+  arr1: TArr1,
+  arr2: TArr2
+): [...TArr1, ...TArr2] => [...arr1, ...arr2];
+concat([1, 2, 3], [4, 5, 6]);
+concat([1, 2, 3] as const, [4, 5, 6] as const);
+
+export const tail = <TArr extends ReadonlyArray<any>>(
+  arr: readonly [any, ...TArr]
+) => {
+  const [_, ...tail] = arr;
+  return tail;
+};
+tail([1, 2, 3]);
+tail([1, 2, 3] as const);
+
+export const curry = <
+  THeadArgs extends ReadonlyArray<any>,
+  TTailArgs extends ReadonlyArray<any>,
+  TResult
+>(
+  f: (...args: [...THeadArgs, ...TTailArgs]) => TResult,
+  ...headArgs: THeadArgs
+) => (...tailArgs: TTailArgs) => f(...headArgs, ...tailArgs);
+declare const doSth: (a: string, b: number, c: boolean, d: Symbol) => string;
+const curriedFn1 = curry(doSth);
+curriedFn1("a", 1, false, Symbol());
+const curriedFn2 = curry(doSth, "a");
+curriedFn2(1, false, Symbol());
+const curriedFn3 = curry(doSth, "a", 1);
+curriedFn3(false, Symbol());

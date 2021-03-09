@@ -22,15 +22,15 @@ export type OF2 = OmitFrom<Function, "apply" | "bind" | "call">;
  * https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html#mapped-types
  */
 
-export type Proxify<TSource> = {
+export type Proxify1<TSource> = {
   [k in keyof TSource]: {
     get: () => TSource[k];
     set: (value: TSource[k]) => void;
-  }
+  };
 };
 
 // Examples
-export type Pr1 = Proxify<{ a: number; b: string }>;
+export type Pr1 = Proxify1<{ a: number; b: string }>;
 
 /**
  * Deferred<TValue>
@@ -117,3 +117,32 @@ export type Re0 = Record<"a" | "b" | "c", number>;
  * https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-5.html#the-omit-helper-type
  */
 export type Om0 = Omit<Object, "constructor" | "hasOwnProperty">;
+
+/**
+ * [Key Remapping in Mapped Types](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-1.html#key-remapping-in-mapped-types)
+ */
+type PropEventSource<T> = {
+  [K in keyof T as `on${Capitalize<string & K>}Change`]: (
+    callback: (newValue: T[K]) => void
+  ) => void;
+};
+declare function makeWatchedObject<T>(o: T): T & PropEventSource<T>;
+const obj3 = makeWatchedObject({ name: "Peter", yob: 2003 });
+obj3.onNameChange(newName => console.log(newName, obj3.name));
+obj3.onYobChange(newYob => console.log(newYob, obj3.yob));
+
+type Getter<T> = {
+  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];
+};
+type Setter<T> = {
+  [K in keyof T as `set${Capitalize<string & Exclude<K, "kind">>}`]: (
+    value: T[K]
+  ) => void;
+};
+type Proxify2<T> = Getter<T> & Setter<T>;
+declare function proxify<T>(o: T): Proxify2<T>;
+const p = proxify({ kind: "point", x: 4, y: 8 });
+console.log(p.getX(), p.getY(), p.getKind());
+p.setX(6);
+p.setY(12);
+p.setKind("square");

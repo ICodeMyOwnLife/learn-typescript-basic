@@ -77,46 +77,46 @@ export type NFP0 = NonFunctionProperties<{
 }>;
 
 /**
- * ElementType<T>
+ * ElementType1<TArray>
  */
-export type ElementType<T> = T extends (infer TElement)[] ? TElement : never;
-
-export type ET0 = ElementType<number[]>;
-export type ET1 = ElementType<[number, string]>;
-export type ET2 = ElementType<{ a: number }>;
-
-/**
- * ElementTypeOf<TArray>
- */
-export type ElementTypeOf<T extends any[]> = T extends (infer TElement)[]
+export type ElementType1<TArray> = TArray extends (infer TElement)[]
   ? TElement
   : never;
 
-export type ETO0 = ElementTypeOf<Function[]>;
-export type ETO1 = ElementTypeOf<[string, (value: string) => void]>;
-export type ETO2 = ElementTypeOf<{ a: number }>;
+export type ET1_0 = ElementType1<number[]>;
+export type ET1_1 = ElementType1<[number, string]>;
+export type ET1_2 = ElementType1<{ a: number }>;
 
 /**
- * ResolveType<T>
+ * ElementType2<TArray>
  */
-export type ResolveType<T> = T extends Promise<infer TResolve>
+export type ElementType2<
+  TArray extends any[]
+> = TArray extends (infer TElement)[] ? TElement : never;
+
+export type ET2_0 = ElementType2<Function[]>;
+export type ET2_1 = ElementType2<[string, (value: string) => void]>;
+export type ET2_2 = ElementType2<{ a: number }>;
+
+/**
+ * ResolveType1<TPromise>
+ */
+export type ResolveType1<TPromise> = TPromise extends Promise<infer TResolve>
   ? TResolve
   : never;
 
-export type RT0 = ResolveType<Promise<Blob>>;
-export type RT1 = ResolveType<string[]>;
+export type RT1_0 = ResolveType1<Promise<Blob>>;
+export type RT1_1 = ResolveType1<string[]>;
 
 /**
- * ResolveTypeOf<TPromise>
+ * ResolveType2<TPromise>
  */
-export type ResolveTypeOf<T extends Promise<any>> = T extends Promise<
-  infer TResolve
->
-  ? TResolve
-  : never;
+export type ResolveType2<
+  TPromise extends Promise<any>
+> = TPromise extends Promise<infer TResolve> ? TResolve : never;
 
-export type RTO0 = ResolveTypeOf<Promise<Uint16Array>>;
-export type RTO1 = ResolveTypeOf<string[]>;
+export type RT2_0 = ResolveType2<Promise<Uint16Array>>;
+export type RT2_1 = ResolveType2<string[]>;
 
 /**
  * ComponentProps<T>
@@ -344,3 +344,40 @@ export type R0 = ReturnType<(...args: any[]) => boolean>;
  * InstanceType<T>: Obtain the return type of a constructor function type
  */
 export type I0 = InstanceType<typeof Promise>;
+
+/**
+ * [Recursive Conditional Types](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-1.html#recursive-conditional-types)
+ */
+
+/**
+ * ElementType3<TArray>
+ */
+export type ElementType3<TArray> = TArray extends ReadonlyArray<infer TElement>
+  ? ElementType3<TElement>
+  : TArray;
+declare const flattenArray: <TArray>(array: TArray) => ElementType3<TArray>[];
+flattenArray(3);
+flattenArray([3]);
+flattenArray([[[3]]]);
+flattenArray([3, [3, [3]]]);
+
+/**
+ * ResolveType3<TPromise>
+ */
+export type ResolveType3<TPromise> = TPromise extends PromiseLike<
+  infer TResolve
+>
+  ? ResolveType3<TResolve>
+  : TPromise;
+declare const flattenPromise: <TPromise, TResult>(
+  promise: TPromise,
+  onFulfilled: (value: ResolveType3<TPromise>) => TResult
+) => Promise<ResolveType3<TResult>>;
+flattenPromise(3, v => v * 2);
+flattenPromise(Promise.resolve(Promise.resolve("123")), s =>
+  Promise.resolve(parseInt(s))
+);
+
+type A = [void];
+declare const doSth: (...args: A) => void;
+doSth();
